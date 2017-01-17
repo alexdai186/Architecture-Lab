@@ -1,0 +1,54 @@
+# Alex Dai
+# amd4482
+# 11/15/2016
+# sum_list
+# Iteratively finds the sum of all the elements in a linked list
+
+.pos 0
+init:
+	irmovq Stack,%rsp		# Stack pointer
+	irmovq Stack,%rbp		# Base pointer
+	call main
+	halt
+
+.align 8
+ele1:
+	.quad 0x00a
+	.quad ele2
+ele2:
+	.quad 0x0b0
+	.quad ele3
+ele3:
+	.quad 0xc00
+	.quad 0
+
+main:
+	irmovq ele1, %rax
+	pushq %rax				# Push the pointer to the list
+	call sum_list			# sumlist(ele1)
+	ret
+	
+sum_list:
+	pushq %rbp
+	rrmovq %rsp,%rbp
+	mrmovq 16(%rbp),%rdx	# Store the pointer to the next element
+	irmovq $0,%rax			# val = 0
+	andq %rdx,%rdx			# If next element is empty, jump to end
+	je return
+	irmovq $8,%rcx			# Set rcx to the index mover
+loop:	
+	mrmovq (%rdx),%rbx		# Move list into %rbx
+	addq %rbx,%rax			# val += ele
+	addq %rcx,%rdx			# Move to next list value
+	mrmovq (%rdx),%rdx
+	andq %rdx,%rdx			# Checks if list element is empty
+	jne loop
+return:
+	popq %rbp
+	ret
+	
+.pos 0x100
+
+Stack:
+	
+
